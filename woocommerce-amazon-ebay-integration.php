@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Codisto LINQ by Codisto
- * Plugin URI: http://wordpress.org/plugins/codistoconnect/
+ * Plugin Name: WooCommerce Amazon and eBay Integration
+ * Plugin URI: https://woocommerce.com/products/woocommerce-amazon-ebay-integration/
  * Description: WooCommerce Amazon & eBay Integration - Convert a WooCommerce store into a fully integrated Amazon & eBay store in minutes
  * Author: Codisto
  * Author URI: https://codisto.com/
