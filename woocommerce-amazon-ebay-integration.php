@@ -5,23 +5,23 @@
  * Description: WooCommerce Amazon & eBay Integration - Convert a WooCommerce store into a fully integrated Amazon & eBay store in minutes
  * Author: Codisto
  * Author URI: https://codisto.com/
- * Version: 1.3.17
+ * Version: 1.3.21
  * Text Domain: codisto-linq
  * Woo: 3545890:ba4772797f6c2c68c5b8e0b1c7f0c4e2
  * WC requires at least: 2.0.0
- * WC tested up to: 3.5.0
+ * WC tested up to: 3.5.2
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package Codisto LINQ by Codisto
- * @version 1.3.17
+ * @version 1.3.21
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'CODISTOCONNECT_VERSION', '1.3.17' );
+define( 'CODISTOCONNECT_VERSION', '1.3.21' );
 define( 'CODISTOCONNECT_RESELLERKEY', '' );
 
 if ( ! class_exists( 'CodistoConnect' ) ) :
@@ -944,38 +944,67 @@ final class CodistoConnect {
 
 					} else {
 
-						$ship_date = get_post_meta( $order->post_id, '_date_shipped', true );
-						if ( $ship_date ) {
-							if ( is_numeric( $ship_date ) ) {
-								$ship_date = date( 'Y-m-d H:i:s', $ship_date );
+						$tracking_object = get_post_meta( $order->post_id, 'wf_wc_shipment_source', true );
+						if( $tracking_object
+							&& is_array( $tracking_object )
+							&& isset( $tracking_object['shipment_id_cs'] ) ) {
+
+							$ship_date = date( 'Y-m-d H:i:s', strtotime( $tracking_object['order_date'] ) );
+							if( $ship_date ) {
+
+								$order->ship_date = $ship_date;
+
 							}
 
-							$order->ship_date = $ship_date;
-						}
+							$carrier = $tracking_object['shipping_service'];
+							if( $carrier ) {
 
-						$carrier = get_post_meta( $order->post_id, '_tracking_provider', true);
-						if ( $carrier ) {
-							if ( $carrier === 'custom' ) {
-								$carrier = get_post_meta( $order->post_id, '_custom_tracking_provider', true );
+								$order->carrier = $carrier;
+
 							}
 
-						} else {
+							$tracking_number = $tracking_object['shipment_id_cs'];
+							if( $tracking_number ) {
 
-							$carrier = get_post_meta( $order->post_id, '_wcst_order_trackname', true);
+								$order->track_number = $tracking_number;
 
-						}
-						if($carrier)
-						{
-							$order->carrier = $carrier;
-						}
+							}
 
-						$tracking_number = get_post_meta( $order->post_id, '_tracking_number', true);
-						if ( !$tracking_number ) {
-							$tracking_number = get_post_meta( $order->post_id, '_wcst_order_trackno', true );
-						}
-						if($tracking_number)
-						{
-							$order->track_number = $tracking_number;
+						}  else {
+
+							$ship_date = get_post_meta( $order->post_id, '_date_shipped', true );
+							if ( $ship_date ) {
+								if ( is_numeric( $ship_date ) ) {
+									$ship_date = date( 'Y-m-d H:i:s', $ship_date );
+								}
+
+								$order->ship_date = $ship_date;
+							}
+
+							$carrier = get_post_meta( $order->post_id, '_tracking_provider', true);
+							if ( $carrier ) {
+								if ( $carrier === 'custom' ) {
+									$carrier = get_post_meta( $order->post_id, '_custom_tracking_provider', true );
+								}
+
+							} else {
+
+								$carrier = get_post_meta( $order->post_id, '_wcst_order_trackname', true);
+
+							}
+							if($carrier)
+							{
+								$order->carrier = $carrier;
+							}
+
+							$tracking_number = get_post_meta( $order->post_id, '_tracking_number', true);
+							if ( !$tracking_number ) {
+								$tracking_number = get_post_meta( $order->post_id, '_wcst_order_trackno', true );
+							}
+							if($tracking_number)
+							{
+								$order->track_number = $tracking_number;
+							}
 						}
 					}
 
@@ -1589,7 +1618,7 @@ final class CodistoConnect {
 							// update_status
 							$order->set_status( 'cancelled' );
 							$update_post_data  = array(
-								'ID'         	=> $order_id,
+								'ID'		 	=> $order_id,
 								'post_status'	=> 'wc-cancelled',
 								'post_date'		=> current_time( 'mysql', 0 ),
 								'post_date_gmt' => current_time( 'mysql', 1 )
@@ -1607,7 +1636,7 @@ final class CodistoConnect {
 								// update_status
 								$order->set_status( 'processing' );
 								$update_post_data  = array(
-									'ID'         	=> $order_id,
+									'ID'		 	=> $order_id,
 									'post_status'	=> 'wc-processing',
 									'post_date'		=> current_time( 'mysql', 0 ),
 									'post_date_gmt' => current_time( 'mysql', 1 )
@@ -1619,7 +1648,7 @@ final class CodistoConnect {
 								// update_status
 								$order->set_status( 'pending' );
 								$update_post_data  = array(
-									'ID'         	=> $order_id,
+									'ID'		 	=> $order_id,
 									'post_status'	=> 'wc-pending',
 									'post_date'		=> current_time( 'mysql', 0 ),
 									'post_date_gmt' => current_time( 'mysql', 1 )
@@ -1634,7 +1663,7 @@ final class CodistoConnect {
 							// update_status
 							$order->set_status( 'completed' );
 							$update_post_data  = array(
-								'ID'         	=> $order_id,
+								'ID'		 	=> $order_id,
 								'post_status'	=> 'wc-completed',
 								'post_date'		=> current_time( 'mysql', 0 ),
 								'post_date_gmt' => current_time( 'mysql', 1 )
@@ -2119,6 +2148,8 @@ final class CodistoConnect {
 
 			if ( $_POST['method'] == 'email' ) {
 				$signupemail = wp_unslash( $_POST['email'] );
+				$signupcountry = wp_unslash( $_POST['countrycode'] );
+				$signupphone = wp_unslash( $_POST['phone'] );
 
 				$httpOptions = array(
 								'method' => 'POST',
@@ -2132,6 +2163,7 @@ final class CodistoConnect {
 										'version' => $blogversion,
 										'url' => $blogurl,
 										'email' => $signupemail,
+										'phone' => $signupphone,
 										'storename' => $blogdescription ,
 										'resellerkey' => $this->reseller_key(),
 										'codistoversion' => CODISTOCONNECT_VERSION
@@ -2152,6 +2184,8 @@ final class CodistoConnect {
 						'version' => $blogversion,
 						'url' => $blogurl,
 						'email' => $signupemail,
+						'phone' => $signupphone,
+						'country' => $signupcountry,
 						'storename' => $blogdescription,
 						'resellerkey' => $this->reseller_key(),
 						'codistoversion' => CODISTOCONNECT_VERSION
@@ -2335,6 +2369,7 @@ final class CodistoConnect {
 
 			?>
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,900,700,400">
+			<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 			<iframe id="dummy-data" frameborder="0" src="https://codisto.com/xpressgriddemo/ebayedit/"></iframe>
 			<div id="dummy-data-overlay"></div>
@@ -2344,7 +2379,7 @@ final class CodistoConnect {
 				<div class="body">
 					<form id="codisto-form" action="<?php echo htmlspecialchars( admin_url( 'admin-post.php' ) ); ?>" method="post">
 						<p>To get started, enter your email address.</p>
-						<p>Your email address will be used to communicate important account information and to
+						<p>Your email address and phone number will be used to communicate important account information and to
 							provide a better support experience for any enquiries with your Codisto account.</p>
 
 						<?php wp_nonce_field( 'codisto-create' ); ?>
@@ -2352,14 +2387,26 @@ final class CodistoConnect {
 						<input type="hidden" name="method" value="email"/>
 
 						<div>
-							<input type="email" name="email" required placeholder="Enter Your Email Address" size="40">
+							<i class="material-icons">email</i> <input type="email" name="email" required placeholder="Enter Your Email Address" size="40">
 						</div>
 						<div>
-							<input type="email" name="emailconfirm" required placeholder="Confirm Your Email Address" size="40">
+							<i class="material-icons">email</i> <input type="email" name="emailconfirm" required placeholder="Confirm Your Email Address" size="40">
+						</div>
+
+						<div>
+							<i class="material-icons">phone_in_talk</i> <input type="tel" name="phone" required placeholder="Enter your Phone Number (incl. country code)" size="40">
+						</div>
+
+						<div class="selection">
+							<i class="material-icons">language</i> <div class="select-html-wrapper"></div>
+							<br/>
+							This is important for creating your initial store defaults.
+							<br/>
+							<br/>
 						</div>
 
 						<div class="next">
-							<button type="submit" class="button btn-lg">Continue</button>
+							<button type="submit" class="button btn-lg">Continue <i class="material-icons">keyboard_arrow_right</i></button>
 						</div>
 						<div class="error-message">
 							<strong>Your email addresses do not match.</strong>
@@ -2756,7 +2803,16 @@ final class CodistoConnect {
 
 		if ( get_transient( 'codisto-admin-notice' ) ){
 			$class = 'notice notice-info is-dismissible';
-			printf( '<div class="%1$s"><p>'.esc_html__( 'Codisto LINQ Successfully Activated!', 'codisto-linq' ).' '. wp_kses( __('<a class="button action" href="admin.php?page=codisto">Click here</a> to get started.', 'codisto-linq' ) ).'</p></div>', esc_attr( $class ) );
+			printf( '<div class="%1$s"><p>'.esc_html__( 'Codisto LINQ Successfully Activated!', 'codisto-linq' ).' '.
+			wp_kses(
+				__('<a class="button action" href="admin.php?page=codisto">Click here</a> to get started.' ),
+				array(
+					'a' => array(
+						'class' => array(),
+						'href' => array()
+					)
+				)
+			).'</p></div>', esc_attr( $class ) );
 		}
 	}
 
