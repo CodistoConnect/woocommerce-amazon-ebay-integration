@@ -1,16 +1,16 @@
 *** WooCommerce Amazon and eBay Integration ***
 
 2019-4-08 - version 1.3.26
-* change readme to highlight Codisto service
-* wordpress tested up to 5.1.1
-* woocommerce tested up to 3.5.7
+* Update - change readme to highlight Codisto service
+* Update - wordpress tested up to 5.1.1
+* Update - woocommerce tested up to 3.5.7
 
 2019-2-04 - version 1.3.25
-* add arguments to product_save hook
+* Update - add arguments to product_save hook
 
 2019-1-31 - version 1.3.24
-* support WooCommerce REST API product edit hooks
-* wordpress tested up to 5.0.3
+* Update - support WooCommerce REST API product edit hooks
+* Update - wordpress tested up to 5.0.3
 
 2018-12-23 - version 1.3.22
 * Update - tested up to 5.0.2 wordpress
