@@ -1,7 +1,10 @@
 *** WooCommerce Amazon and eBay Integration ***
 
+2019-05-10 - version 1.3.28
+* wordpress tested up to 5.2
+
 2019-04-26 - version 1.3.27
-* Update - WooCommerce tested up to 3.6.2
+* WooCommerce tested up to 3.6.2
 
 2019-4-08 - version 1.3.26
 * Update - change readme to highlight Codisto service
