@@ -1,10 +1,15 @@
 *** WooCommerce Amazon and eBay Integration ***
 
+2019-06-27 - version 1.3.29
+* Update - link listing menu name change
+* Update - wordpress tested up to 5.2.2
+* Update - woocommerce tested up to 3.6.4
+
 2019-05-10 - version 1.3.28
-* wordpress tested up to 5.2
+* Update - wordpress tested up to 5.2
 
 2019-04-26 - version 1.3.27
-* WooCommerce tested up to 3.6.2
+* Update - WooCommerce tested up to 3.6.2
 
 2019-4-08 - version 1.3.26
 * Update - change readme to highlight Codisto service
