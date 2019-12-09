@@ -1,5 +1,9 @@
 *** WooCommerce Amazon and eBay Integration ***
 
+2019-11-27 - version 1.3.33
+* Update - Switch to wc_maybe_reduce_stock_levels
+* Update - woocommerce tested up to 3.8
+
 2019-08-14 - version 1.3.32
 * Update - woocommerce tested up to 3.7
 * Fix - deal with simple product attributes that have is_variation true
@@ -13,27 +17,27 @@
 * Update - woocommerce tested up to 3.6.5
 
 2019-06-27 - version 1.3.29
-* Update - link listing menu name change
-* Update - wordpress tested up to 5.2.2
+* link listing menu name change
+* wordpress tested up to 5.2.2
 * Update - woocommerce tested up to 3.6.4
 
 2019-05-10 - version 1.3.28
-* Update - wordpress tested up to 5.2
+* wordpress tested up to 5.2
 
 2019-04-26 - version 1.3.27
-* Update - WooCommerce tested up to 3.6.2
+* WooCommerce tested up to 3.6.2
 
 2019-4-08 - version 1.3.26
-* Update - change readme to highlight Codisto service
-* Update - wordpress tested up to 5.1.1
-* Update - woocommerce tested up to 3.5.7
+* change readme to highlight Codisto service
+* wordpress tested up to 5.1.1
+* woocommerce tested up to 3.5.7
 
 2019-2-04 - version 1.3.25
-* Update - add arguments to product_save hook
+* add arguments to product_save hook
 
 2019-1-31 - version 1.3.24
-* Update - support WooCommerce REST API product edit hooks
-* Update - wordpress tested up to 5.0.3
+* support WooCommerce REST API product edit hooks
+* wordpress tested up to 5.0.3
 
 2018-12-23 - version 1.3.22
 * Update - tested up to 5.0.2 wordpress
