@@ -108,7 +108,7 @@
 2017-05-24 - version 1.3.0
 * Update - transmit plugin version during synchronisation
 
-2017-05-09 - version 1.2.5
+2017-05-09 - version 1.2.50
 * Update - updated menu items
 
 2017-05-01 - version 1.2.49
@@ -181,7 +181,7 @@
 * Update - support multiple shipping options in the shipping callback
 * Fix	 - properly add any applicable tax on shipping to the inc tax freight result
 
-2016-05-05 - version 1.2.6
+2016-05-05 - version 1.2.26
 * Fix	 - fixed an issue with rewrite generation in plugin activation when site and home urls had different protocols
 * Add 	 - added dynamic shipping callback for realtime bulky item rates on ebay
 
