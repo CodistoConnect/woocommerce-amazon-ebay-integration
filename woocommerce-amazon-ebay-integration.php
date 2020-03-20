@@ -5,7 +5,7 @@
  * Description: WooCommerce Amazon & eBay Integration - Convert a WooCommerce store into a fully integrated Amazon & eBay store in minutes
  * Author: Codisto
  * Author URI: https://codisto.com/
- * Version: 1.3.40
+ * Version: 1.3.41
  * Text Domain: codisto-linq
  * Woo: 3545890:ba4772797f6c2c68c5b8e0b1c7f0c4e2
  * WC requires at least: 2.0.0
@@ -14,14 +14,14 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package Codisto LINQ by Codisto
- * @version 1.3.40
+ * @version 1.3.41
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'CODISTOCONNECT_VERSION', '1.3.40' );
+define( 'CODISTOCONNECT_VERSION', '1.3.41' );
 define( 'CODISTOCONNECT_RESELLERKEY', '' );
 
 if ( ! class_exists( 'CodistoConnect' ) ) :
@@ -323,7 +323,7 @@ final class CodistoConnect {
 					'country_code' => $country_code,
 					'state_code' => $state_code,
 					'shipping_tax_class' => $shipping_tax_class,
-				 	'version' => CODISTOCONNECT_VERSION
+					'version' => CODISTOCONNECT_VERSION
 				);
 
 				$this->sendHttpHeaders(
@@ -728,10 +728,14 @@ final class CodistoConnect {
 										$value = implode( ',', $value );
 									}
 								}
-
 								$product->attributes[] = array( 'name' => $attribute, 'value' => $value );
 							}
-						}
+						} elseif ( $attribute === '_woocommerce_gpf_data' &&
+							is_array($value) &&
+							isset($value['gtin']) ) {
+							$product->attributes[] = array( 'name' => '_woocommerce_gpf_data.gtin', 'value' => $value['gtin'] );
+					 	}
+
 					}
 
 					// acf
@@ -1627,6 +1631,15 @@ final class CodistoConnect {
 						}
 
 					}
+
+					if ( isset( $ordercontent->notifywoocommerceflag ) && $ordercontent->notifywoocommerceflag != null ) {
+						$notifywoocommerceflag = (string)$ordercontent->notifywoocommerceflag;
+
+						if( $notifywoocommerceflag === 'true' ) {
+							$order->save();
+						}
+					}
+
 
 					$wpdb->query( 'COMMIT' );
 
