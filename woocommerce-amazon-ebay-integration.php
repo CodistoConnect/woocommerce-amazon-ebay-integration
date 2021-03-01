@@ -5,7 +5,7 @@
  * Description: Sell multichannel on Google, Amazon & eBay direct from WooCommerce. Create listings & sync products, inventory & orders directly from WooCommerce
  * Author: Codisto
  * Author URI: https://codisto.com/
- * Version: 1.3.56
+ * Version: 1.3.57
  * Text Domain: codisto-linq
  * Woo: 3545890:ba4772797f6c2c68c5b8e0b1c7f0c4e2
  * WC requires at least: 2.0.0
@@ -14,14 +14,14 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package Codisto LINQ by Codisto
- * @version 1.3.56
+ * @version 1.3.57
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'CODISTOCONNECT_VERSION', '1.3.56' );
+define( 'CODISTOCONNECT_VERSION', '1.3.57' );
 define( 'CODISTOCONNECT_RESELLERKEY', '' );
 
 if ( ! class_exists( 'CodistoConnect' ) ) :
@@ -446,6 +446,10 @@ final class CodistoConnect {
 				foreach ( $products as $product ) {
 
 					$wc_product = $this->get_product( $product->id );
+
+					if(!is_object($wc_product)) {
+						continue;
+					}
 
 					$categoryproduct = $wc_product->get_categories();
 
@@ -2166,11 +2170,12 @@ final class CodistoConnect {
 		$codisto_order_id = get_post_meta( $order->get_id(), '_codisto_orderid', true );
 		if ( is_numeric( $codisto_order_id ) && $codisto_order_id !== 0 ) {
 			$ebay_user = get_post_meta( $order->get_id(), '_codisto_ebayusername', true );
+			$merchantid = get_post_meta( $order->get_id(), '_codisto_merchantid', true );
 			if ( $ebay_user ) {
 				?>
 				<p class="form-field form-field-wide codisto-order-buttons">
-				<a href="<?php echo htmlspecialchars( admin_url( 'codisto/ebaysale?orderid='.$codisto_order_id ) ) ?>" target="codisto!sale" class="button"><?php esc_html_e( 'eBay Order', 'codisto-linq' ) ?> &rarr;</a>
-				<a href="<?php echo htmlspecialchars( admin_url( 'codisto/ebayuser?orderid='.$codisto_order_id) ) ?>" target="codisto!user" class="button"><?php esc_html_e( 'eBay User', 'codisto-linq' ) ?><?php echo $ebay_user ? ' : '.htmlspecialchars( $ebay_user ) : ''; ?> &rarr;</a>
+				<a href="<?php echo htmlspecialchars( admin_url( 'codisto/ebaysale?orderid='.$codisto_order_id.'&merchantid='.$merchantid ) ) ?>" target="codisto!sale" class="button"><?php esc_html_e( 'eBay Order', 'codisto-linq' ) ?> &rarr;</a>
+				<a href="<?php echo htmlspecialchars( admin_url( 'codisto/ebayuser?orderid='.$codisto_order_id.'&merchantid='.$merchantid) ) ?>" target="codisto!user" class="button"><?php esc_html_e( 'eBay User', 'codisto-linq' ) ?><?php echo $ebay_user ? ' : '.htmlspecialchars( $ebay_user ) : ''; ?> &rarr;</a>
 				</p>
 				<?php
 			}
@@ -2178,7 +2183,7 @@ final class CodistoConnect {
 			if ( $amazon_order ) {
 				?>
 				<p class="form-field form-field-wide codisto-order-buttons">
-				<a href="<?php echo htmlspecialchars( admin_url( 'codisto/amazonsale?orderid='.$codisto_order_id ) ) ?>" target="codisto!sale" class="button"><?php esc_html_e( 'Amazon Order', 'codisto-linq' ) ?> &rarr;</a>
+				<a href="<?php echo htmlspecialchars( admin_url( 'codisto/amazonsale?orderid='.$codisto_order_id.'&merchantid='.$merchantid ) ) ?>" target="codisto!sale" class="button"><?php esc_html_e( 'Amazon Order', 'codisto-linq' ) ?> &rarr;</a>
 				</p>
 				<?php
 			}
